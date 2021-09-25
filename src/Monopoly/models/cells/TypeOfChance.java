@@ -1,4 +1,4 @@
-package Monopoly.models.Cells;
+package Monopoly.models.cells;
 
 public enum TypeOfChance {
     GIFT,

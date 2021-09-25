@@ -1,22 +1,22 @@
 package Monopoly.models;
 
-import Monopoly.models.Cells.BlockOfStreets;
-import Monopoly.models.Cells.Cell;
-import Monopoly.models.Cells.Property;
+import Monopoly.models.cells.BlockOfProperties;
+import Monopoly.models.cells.Cell;
+
 
 import java.util.Map;
 import java.util.Set;
 
 public class Bank {
-    private Map<BlockOfStreets, Set<Property>> allCardInBank;
+    private Map<BlockOfProperties, Set<Cell>> allCardInBank;
 
 
-    public Bank(Map<BlockOfStreets,Set<Property>> allCardInBank) {
+    public Bank(Map<BlockOfProperties,Set<Cell>> allCardInBank) {
         this.allCardInBank = allCardInBank;
     }
 
 
-    public Map<BlockOfStreets, Set<Property>> getAllCardInBank() {
+    public Map<BlockOfProperties, Set<Cell>> getAllCardInBank() {
         return allCardInBank;
     }
 

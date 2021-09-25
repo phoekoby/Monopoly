@@ -1,8 +1,9 @@
 package Monopoly.services;
 
 import Monopoly.models.Bank;
-import Monopoly.models.Cells.*;
+import Monopoly.models.cells.*;
 import Monopoly.models.Game;
+
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,35 +14,22 @@ public class BankService {
 
     public Bank createBank(Game game){
 
-        Cell start = game.getMap();
-        Cell card = game.getMap().getNextCell();
-        Map<BlockOfStreets, Set<Property>> allcards = new HashMap<>();
-        while(card!=start){
-                if(card instanceof StreetCell){
-                    if(allcards.containsKey(((StreetCell) card).getBlockOfStreets())){
-                        allcards.get(((StreetCell) card).getBlockOfStreets()).add((Property) card);
-                    }else{
-                        allcards.put(((StreetCell) card).getBlockOfStreets(),new HashSet<>());
-                        allcards.get(((StreetCell) card).getBlockOfStreets()).add((Property) card);
-                    }
-                }else if(card instanceof StationCell){
-                    if(allcards.containsKey(BlockOfStreets.STATION)){
-                        allcards.get(BlockOfStreets.STATION).add((Property) card);
-                    }else{
-                        allcards.put(BlockOfStreets.STATION,new HashSet<>());
-                        allcards.get(BlockOfStreets.STATION).add((Property) card);
-                    }
-                }else if(card instanceof UtilityCell){
-                    if(allcards.containsKey(BlockOfStreets.UTILITY)){
-                        allcards.get(BlockOfStreets.UTILITY).add((Property) card);
-                    }else{
-                        allcards.put(BlockOfStreets.UTILITY,new HashSet<>());
-                        allcards.get(BlockOfStreets.UTILITY).add((Property) card);
-                    }
-                }
 
-            card=card.getNextCell();
+        Cell cell = game.getStart().getNextCell();
+        Map<BlockOfProperties,Set<Cell>> allcards = new HashMap<>();
+        while (cell!= game.getStart()){
+            if(cell.getCellType().equals(CellType.STREET)||cell.getCellType().equals(CellType.STATION)||cell.getCellType().equals(CellType.UTILITY)){
+                if(allcards.containsKey(cell.getBlockOfProperties())){
+                    allcards.get(cell.getBlockOfProperties()).add(cell);
+                }else{
+                    allcards.put(cell.getBlockOfProperties(),new HashSet<>());
+                    allcards.get(cell.getBlockOfProperties()).add(cell);
+                }
+            }
+            cell=cell.getNextCell();
         }
+
+
 
         return new Bank(allcards);
     }

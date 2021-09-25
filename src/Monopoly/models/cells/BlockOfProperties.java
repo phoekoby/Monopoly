@@ -1,6 +1,6 @@
-package Monopoly.models.Cells;
+package Monopoly.models.cells;
 
-public enum BlockOfStreets {
+public enum BlockOfProperties {
     BROWN,
     LIGHT_BLUE,
     PINK,
@@ -10,5 +10,6 @@ public enum BlockOfStreets {
     GREEN,
     BLUE,
     UTILITY,
-    STATION
+    STATION,
+    NONE
 }

@@ -1,25 +1,35 @@
 package Monopoly.models;
 
-import Monopoly.models.Cells.BlockOfStreets;
-import Monopoly.models.Cells.Cell;
-import Monopoly.models.Cells.Chance;
-import Monopoly.models.Cells.Property;
+import Monopoly.models.cells.Cell;
+import Monopoly.models.cells.ChanceCard;
+import Monopoly.models.cells.BlockOfProperties;
+
 
 import java.util.*;
+
 
 public class Game {
     private GameState gameState;
     private List<Gamer> gamers;
-    private Cell map;
-    private Map<Property, Gamer> cardsAndOwners;
-    private Map<Gamer, Map<BlockOfStreets, Set<Property>>> playersAndHisCards;
-    private Map<BlockOfStreets, Integer> howManyYouNeedToBuildHouse;
+    private Cell start;
+    private Cell jail;
+    private Map<Gamer, Cell> gamersLocation;
+    private Map<Cell, Gamer> cardsAndOwners;
+    private Map<Gamer, Map<BlockOfProperties, Set<Cell>>> playersAndHisCards;
+    private Map<BlockOfProperties, Integer> howManyYouNeedToBuildHouse;
+    private Map<Gamer,Cell> location;
+
 
     private Bank bank;
-    private Queue<Chance> chances;
+    private Queue<ChanceCard> chances;
 
+    public Cell getJail() {
+        return jail;
+    }
 
-
+    public void setJail(Cell jail) {
+        this.jail = jail;
+    }
 
     public void setBank(Bank bank) {
         this.bank = bank;
@@ -33,11 +43,11 @@ public class Game {
         this.gameState = gameState;
     }
 
-    public void setPlayersAndHisCards(Map<Gamer, Map<BlockOfStreets,Set< Property>>> playersAndHisCards) {
+    public void setPlayersAndHisCards(Map<Gamer, Map<BlockOfProperties,Set<Cell>>> playersAndHisCards) {
         this.playersAndHisCards = playersAndHisCards;
     }
 
-    public void setHowManyYouNeedToBuildHouse(Map<BlockOfStreets, Integer> howManyYouNeedToBuildHouse) {
+    public void setHowManyYouNeedToBuildHouse(Map<BlockOfProperties, Integer> howManyYouNeedToBuildHouse) {
         this.howManyYouNeedToBuildHouse = howManyYouNeedToBuildHouse;
     }
 
@@ -45,11 +55,11 @@ public class Game {
         return gameState;
     }
 
-    public Map<Gamer, Map<BlockOfStreets,Set<Property>> >getPlayersAndHisCards() {
+    public Map<Gamer, Map<BlockOfProperties,Set<Cell>> >getPlayersAndHisCards() {
         return playersAndHisCards;
     }
 
-    public Map<BlockOfStreets, Integer> getHowManyYouNeedToBuildHouse() {
+    public Map<BlockOfProperties, Integer> getHowManyYouNeedToBuildHouse() {
         return howManyYouNeedToBuildHouse;
     }
 
@@ -61,11 +71,8 @@ public class Game {
         this.gamers = gamers;
     }
 
-    public void setMap(Cell map) {
-        this.map = map;
-    }
 
-    public void setCardsAndOwners(Map<Property, Gamer> cardsAndOwners) {
+    public void setCardsAndOwners(Map<Cell, Gamer> cardsAndOwners) {
         this.cardsAndOwners = cardsAndOwners;
     }
 
@@ -79,15 +86,47 @@ public class Game {
         return gamers;
     }
 
-    public Cell getMap() {
-        return map;
-    }
 
-    public Map<Property, Gamer> getCardsAndOwners() {
+
+    public Map<Cell, Gamer> getCardsAndOwners() {
         return cardsAndOwners;
     }
 
+    public void setGamers(List<Gamer> gamers) {
+        this.gamers = gamers;
+    }
 
+    public void setStart(Cell start) {
+        this.start = start;
+    }
+
+    public void setGamersLocation(Map<Gamer, Cell> gamersLocation) {
+        this.gamersLocation = gamersLocation;
+    }
+
+    public void setLocation(Map<Gamer, Cell> location) {
+        this.location = location;
+    }
+
+    public void setChances(Queue<ChanceCard> chances) {
+        this.chances = chances;
+    }
+
+    public Cell getStart() {
+        return start;
+    }
+
+    public Map<Gamer, Cell> getGamersLocation() {
+        return gamersLocation;
+    }
+
+    public Map<Gamer, Cell> getLocation() {
+        return location;
+    }
+
+    public Queue<ChanceCard> getChances() {
+        return chances;
+    }
 
     @Override
     public String toString() {
