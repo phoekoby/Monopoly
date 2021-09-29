@@ -5,6 +5,7 @@ import Monopoly.models.cells.Cell;
 
 import Monopoly.models.Game;
 import Monopoly.models.Gamer;
+import Monopoly.models.cells.CellType;
 
 import java.util.*;
 
@@ -12,7 +13,10 @@ public class CellServices {
 
 
 
-    public boolean canBuy(Game game, Cell card) {
+    public boolean canBuy(Game game, Cell card) throws Exception {
+        if(card.getCellType()!= CellType.STREET&&card.getCellType()!=CellType.STATION&&card.getCellType()!=CellType.UTILITY){
+            throw new Exception("Эта карточка не является имуществом");
+        }
         System.out.println(game.getBank().getAllCardInBank().get(card.getBlockOfProperties()).toString());
         if (game.getBank().getAllCardInBank().get(card.getBlockOfProperties()).contains(card)) {
             System.out.println("true");

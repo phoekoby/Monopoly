@@ -4,7 +4,10 @@ public class ChanceCard {
     private TypeOfChance type;
     private String message;
     private Cell go_to;
-    private int countOfMoney;
+    private int countOfMoneyOfSteps;
+
+
+
 
 
     public ChanceCard(TypeOfChance type, String message, Cell go_to) {
@@ -16,7 +19,12 @@ public class ChanceCard {
     public ChanceCard(TypeOfChance type, String message, int countOfMoney) {
         this.type = type;
         this.message=message;
-        this.countOfMoney=countOfMoney;
+        this.countOfMoneyOfSteps=countOfMoney;
+    }
+
+    public ChanceCard(TypeOfChance type, String message) {
+        this.type = type;
+        this.message = message;
     }
 
     public TypeOfChance getType() {
@@ -31,8 +39,8 @@ public class ChanceCard {
         return go_to;
     }
 
-    public int getCountOfMoney() {
-        return countOfMoney;
+    public int getCountOfMoneyOrSteps() {
+        return countOfMoneyOfSteps;
     }
 
     public void setType(TypeOfChance type) {
@@ -47,7 +55,4 @@ public class ChanceCard {
         this.go_to = go_to;
     }
 
-    public void setCountOfMoney(int countOfMoney) {
-        this.countOfMoney = countOfMoney;
-    }
 }

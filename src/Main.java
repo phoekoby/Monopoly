@@ -11,8 +11,8 @@ public class Main {
         Set<Integer> s = new HashSet<>();
 
         Game game = new Game();
-        GameService gameService = new GameService();
-        gameService.start(game,6);
+        GameService gameService = new GameService(game);
+        gameService.start(6);
 
     }
 

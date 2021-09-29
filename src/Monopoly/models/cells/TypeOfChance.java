@@ -4,5 +4,7 @@ public enum TypeOfChance {
     GIFT,
     GO_TO,
     TAX,
-    SKIP
+    SKIP,
+    GO_TO_JAIL,
+    DO_STEPS
 }

@@ -18,6 +18,8 @@ public class Game {
     private Map<Gamer, Map<BlockOfProperties, Set<Cell>>> playersAndHisCards;
     private Map<BlockOfProperties, Integer> howManyYouNeedToBuildHouse;
     private Map<Gamer,Cell> location;
+    private Queue<Gamer> playerMoves;
+    private Queue<Gamer> secondPlayerMoves;
 
 
     private Bank bank;
