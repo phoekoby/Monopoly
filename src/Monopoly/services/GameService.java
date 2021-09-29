@@ -13,6 +13,7 @@ public class GameService {
     private final CellServices cellService = new CellServices();
     private final ChanceService chanceService = new ChanceService();
     private final Game game;
+    private int countOfGamers;
 
     public GameService(Game game) {
     this.game=game;
@@ -79,6 +80,7 @@ public class GameService {
     }
 
     public void start(int countOfGamers) throws Exception {
+
         creatingGame(countOfGamers);
 
         cellService.canBuy(game, game.getStart().getNextCell());
@@ -88,10 +90,37 @@ public class GameService {
 
         // System.out.println(game.getGamers().get(1).getCurrent().toString());
         System.out.println(game.getGamers().toString());
+        play();
+    }
+    private void changeQueue(){
+        Queue<Gamer> gamers = game.getPlayerMoves();
+        game.setPlayerMoves(game.getSecondPlayerMoves());
+        game.setSecondPlayerMoves(gamers);
     }
 
-    public void play(){
+    public void play() throws Exception{
+        int changeQueue = 0;
+    while (game.getGamers().size()>1 && !game.getPlayerMoves().isEmpty()){
+        Gamer gamer = game.getPlayerMoves().poll();
+        boolean canStepNext = gamerService.doSomething(gamer, game);
+        if(!game.getGamers().contains(gamer)){
+            continue;
+        }
+        Thread.sleep(5000);
+        if(canStepNext){
+            game.getSecondPlayerMoves().offer(gamer);
+        }else {
+            game.getPlayerMoves().offer(gamer);
+        }
 
+        changeQueue++;
+        //System.out.println(countOfGamers + " " + changeQueue);
+       // System.out.println(game.getGamers().size());
+        if(changeQueue==game.getGamers().size() || game.getPlayerMoves().isEmpty()){
+            changeQueue=0;
+            changeQueue();
+        }
+    }
     }
 
 }

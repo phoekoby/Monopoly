@@ -26,28 +26,29 @@ public class CellServices {
         }
     }
 
-//    public void buy(Gamer gamer, Game game, Cell cell) throws Exception {
-//        if (!canBuy(game, cell)) {
-//            throw new Exception("Нельзя купить карту, заплатите ипотеку");
-//        }
-//        gamer.setMoney(gamer.getMoney() - cell.getPrice());
-//        game.getBank().getAllCardInBank().get(cell.getBlockOfProperties()).remove(cell);
-//        gamer.getOwn().add(cell);
-//        addToOwnGamersCard_ForGamer(gamer, cell);
-//        addToPlayersAndHisCards_ForGame(gamer, game, cell);
-//    }
-//
-//    /**
-//     * Метод добавляет карточку в словарь карточек класса Gamer
-//     **/
-//    private void addToOwnGamersCard_ForGamer(Gamer gamer, Cell cell) {
-//        if (gamer.getOwnCards().containsKey(cell.getBlockOfProperties())) {
-//            gamer.getOwnCards().get(cell.getBlockOfProperties()).add(cell);
-//        } else {
-//            gamer.getOwnCards().put(cell.getBlockOfProperties(), new HashSet<>());
-//            gamer.getOwnCards().get(cell.getBlockOfProperties()).add(cell);
-//        }
-//    }
+
+    public void buy(Gamer gamer, Game game, Cell cell) throws Exception {
+        if (!canBuy(game, cell)) {
+            throw new Exception("Нельзя купить карту, заплатите ипотеку");
+        }
+        gamer.setMoney(gamer.getMoney() - cell.getPrice());
+        game.getBank().getAllCardInBank().get(cell.getBlockOfProperties()).remove(cell);
+        gamer.getOwn().add(cell);
+        addToOwnGamersCard_ForGamer(gamer, cell);
+        addToPlayersAndHisCards_ForGame(gamer, game, cell);
+    }
+
+    /**
+     * Метод добавляет карточку в словарь карточек класса Gamer
+     **/
+    private void addToOwnGamersCard_ForGamer(Gamer gamer, Cell cell) {
+        if (gamer.getOwnCards().containsKey(cell.getBlockOfProperties())) {
+            gamer.getOwnCards().get(cell.getBlockOfProperties()).add(cell);
+        } else {
+            gamer.getOwnCards().put(cell.getBlockOfProperties(), new HashSet<>());
+            gamer.getOwnCards().get(cell.getBlockOfProperties()).add(cell);
+        }
+    }
 
     /**
      * Метод добавляет карточку в словарь карточек класса Game

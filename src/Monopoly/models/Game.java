@@ -33,6 +33,22 @@ public class Game {
         this.jail = jail;
     }
 
+    public Queue<Gamer> getPlayerMoves() {
+        return playerMoves;
+    }
+
+    public Queue<Gamer> getSecondPlayerMoves() {
+        return secondPlayerMoves;
+    }
+
+    public void setPlayerMoves(Queue<Gamer> playerMoves) {
+        this.playerMoves = playerMoves;
+    }
+
+    public void setSecondPlayerMoves(Queue<Gamer> secondPlayerMoves) {
+        this.secondPlayerMoves = secondPlayerMoves;
+    }
+
     public void setBank(Bank bank) {
         this.bank = bank;
     }
@@ -53,6 +69,11 @@ public class Game {
         this.howManyYouNeedToBuildHouse = howManyYouNeedToBuildHouse;
     }
 
+    public List<Gamer> getGamers() {
+        return gamers;
+    }
+
+
     public GameState getGameState() {
         return gameState;
     }
@@ -69,9 +90,6 @@ public class Game {
         this.gameState = gameState;
     }
 
-    public void setGamers(LinkedList<Gamer> gamers) {
-        this.gamers = gamers;
-    }
 
 
     public void setCardsAndOwners(Map<Cell, Gamer> cardsAndOwners) {
@@ -84,9 +102,7 @@ public class Game {
         return gameState;
     }
 
-    public List<Gamer> getGamers() {
-        return gamers;
-    }
+
 
 
 
