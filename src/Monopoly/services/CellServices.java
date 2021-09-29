@@ -33,22 +33,21 @@ public class CellServices {
         }
         gamer.setMoney(gamer.getMoney() - cell.getPrice());
         game.getBank().getAllCardInBank().get(cell.getBlockOfProperties()).remove(cell);
-        gamer.getOwn().add(cell);
-        addToOwnGamersCard_ForGamer(gamer, cell);
+
         addToPlayersAndHisCards_ForGame(gamer, game, cell);
     }
-
-    /**
-     * Метод добавляет карточку в словарь карточек класса Gamer
-     **/
-    private void addToOwnGamersCard_ForGamer(Gamer gamer, Cell cell) {
-        if (gamer.getOwnCards().containsKey(cell.getBlockOfProperties())) {
-            gamer.getOwnCards().get(cell.getBlockOfProperties()).add(cell);
-        } else {
-            gamer.getOwnCards().put(cell.getBlockOfProperties(), new HashSet<>());
-            gamer.getOwnCards().get(cell.getBlockOfProperties()).add(cell);
-        }
-    }
+//
+//    /**
+//     * Метод добавляет карточку в словарь карточек класса Gamer
+//     **/
+//    private void addToOwnGamersCard_ForGamer(Gamer gamer,Game game, Cell cell) {
+//        if (game.getPlayersAndHisCards().get(gamer).containsKey(cell.getBlockOfProperties())) {
+//            game.getPlayersAndHisCards().get(gamer).get(cell.getBlockOfProperties()).add(cell);
+//        } else {
+//            game.getPlayersAndHisCards().get(gamer).put(cell.getBlockOfProperties(),new HashSet<>());
+//            game.getPlayersAndHisCards().get(gamer).get(cell.getBlockOfProperties()).add(cell);
+//        }
+//    }
 
     /**
      * Метод добавляет карточку в словарь карточек класса Game

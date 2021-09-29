@@ -13,8 +13,6 @@ import java.util.Set;
 public class BankService {
 
     public Bank createBank(Game game){
-
-
         Cell cell = game.getStart().getNextCell();
         Map<BlockOfProperties,Set<Cell>> allcards = new HashMap<>();
         while (cell!= game.getStart()){
@@ -32,5 +30,9 @@ public class BankService {
 
 
         return new Bank(allcards);
+    }
+    public void auction(Cell cell){
+        int price = 10;
+
     }
 }

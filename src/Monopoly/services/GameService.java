@@ -65,7 +65,7 @@ public class GameService {
         cell = function(cell, new Cell("Лениградская жд", null, CellType.STATION, BlockOfProperties.STATION, 200));
         cell = function(cell, new Cell("Шанс", null, CellType.CHANCE, BlockOfProperties.NONE));
         cell = function(cell, new Cell("Ул. Малая Бронная", null, CellType.STREET, BlockOfProperties.BLUE, 350));
-        cell = function(cell, new Cell("Сверхналог", null, CellType.TAX, BlockOfProperties.NONE));
+        cell = function(cell, new Cell("Сверхналог", null, CellType.TAX, BlockOfProperties.NONE,300));
         cell = function(cell, new Cell("Ул. Арбат", null, CellType.STREET, BlockOfProperties.BLUE, 400));
         cell.setNextCell(start);
         game.setStart(start);
@@ -92,34 +92,41 @@ public class GameService {
         System.out.println(game.getGamers().toString());
         play();
     }
-    private void changeQueue(){
-        Queue<Gamer> gamers = game.getPlayerMoves();
-        game.setPlayerMoves(game.getSecondPlayerMoves());
-        game.setSecondPlayerMoves(gamers);
-    }
+//    private void changeQueue(){
+//        Queue<Gamer> gamers = game.getPlayerMoves();
+//        game.setPlayerMoves(game.getSecondPlayerMoves());
+//        game.setSecondPlayerMoves(gamers);
+//    }
 
     public void play() throws Exception{
         int changeQueue = 0;
     while (game.getGamers().size()>1 && !game.getPlayerMoves().isEmpty()){
         Gamer gamer = game.getPlayerMoves().poll();
-        boolean canStepNext = gamerService.doSomething(gamer, game);
-        if(!game.getGamers().contains(gamer)){
-            continue;
-        }
-        Thread.sleep(5000);
-        if(canStepNext){
-            game.getSecondPlayerMoves().offer(gamer);
+        game.getPlayerMoves().offer(gamer);
+        if(!game.getCanGamerDoStep().get(gamer)){
+            gamerService.makeNextSkipOrNotSkip(game,gamer);
         }else {
-            game.getPlayerMoves().offer(gamer);
-        }
+           gamerService.doSomething(gamer, game);
 
-        changeQueue++;
-        //System.out.println(countOfGamers + " " + changeQueue);
-       // System.out.println(game.getGamers().size());
-        if(changeQueue==game.getGamers().size() || game.getPlayerMoves().isEmpty()){
-            changeQueue=0;
-            changeQueue();
+
+//            if (!game.getGamers().contains(gamer)) {
+//                continue;
+//            }
         }
+        Thread.sleep(1000);
+//        if(canStepNext){
+//            game.getSecondPlayerMoves().offer(gamer);
+//        }else {
+//            game.getPlayerMoves().offer(gamer);
+//        }
+
+//        changeQueue++;
+//        //System.out.println(countOfGamers + " " + changeQueue);
+//       // System.out.println(game.getGamers().size());
+//        if(changeQueue==game.getGamers().size() || game.getPlayerMoves().isEmpty()){
+//            changeQueue=0;
+//            changeQueue();
+//        }
     }
     }
 

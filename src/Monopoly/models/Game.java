@@ -19,7 +19,7 @@ public class Game {
     private Map<BlockOfProperties, Integer> howManyYouNeedToBuildHouse;
     private Map<Gamer,Cell> location;
     private Queue<Gamer> playerMoves;
-    private Queue<Gamer> secondPlayerMoves;
+    private Map<Gamer, Boolean> canGamerDoStep = new HashMap<>();
 
 
     private Bank bank;
@@ -37,16 +37,17 @@ public class Game {
         return playerMoves;
     }
 
-    public Queue<Gamer> getSecondPlayerMoves() {
-        return secondPlayerMoves;
-    }
 
     public void setPlayerMoves(Queue<Gamer> playerMoves) {
         this.playerMoves = playerMoves;
     }
 
-    public void setSecondPlayerMoves(Queue<Gamer> secondPlayerMoves) {
-        this.secondPlayerMoves = secondPlayerMoves;
+    public Map<Gamer, Boolean> getCanGamerDoStep() {
+        return canGamerDoStep;
+    }
+
+    public void setCanGamerDoStep(Map<Gamer, Boolean> canGamerDoStep) {
+        this.canGamerDoStep = canGamerDoStep;
     }
 
     public void setBank(Bank bank) {
