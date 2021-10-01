@@ -8,12 +8,31 @@ import Monopoly.models.Gamer;
 import java.util.*;
 
 public class GameService {
-    private final GamerService gamerService = new GamerService();
+    private final GamerService gamerService = new GamerService(this);
     private final BankService bankService = new BankService();
     private final CellServices cellService = new CellServices();
     private final ChanceService chanceService = new ChanceService();
     private final Game game;
-    private int countOfGamers;
+
+    public GamerService getGamerService() {
+        return gamerService;
+    }
+
+    public BankService getBankService() {
+        return bankService;
+    }
+
+    public CellServices getCellService() {
+        return cellService;
+    }
+
+    public ChanceService getChanceService() {
+        return chanceService;
+    }
+
+    public Game getGame() {
+        return game;
+    }
 
     public GameService(Game game) {
     this.game=game;
@@ -22,8 +41,27 @@ public class GameService {
 
 
     private Cell function(Cell cell, Cell card) {
+        if(card.getCellType()==CellType.STATION || card.getCellType()==CellType.UTILITY||card.getCellType()==CellType.STREET) {
+            game.getHowManyToPayRenta().put(card, card.getCellType()==CellType.STREET?(int) (card.getPrice() * 0.08):(int)(card.getPrice()*0.25));
+            if(card.getCellType()==CellType.STREET){
+                game.getHouses().put(card,0);
+                game.getHotels().put(card,0);
+            }
+        }
         cell.setNextCell(card);
         return cell.getNextCell();
+    }
+    private void createHowManyForHouse(){
+        Map<BlockOfProperties, Integer> howMany = new HashMap<>();
+        howMany.put(BlockOfProperties.BROWN,50);
+        howMany.put(BlockOfProperties.BLUE,200);
+        howMany.put(BlockOfProperties.PINK,100);
+        howMany.put(BlockOfProperties.RED,150);
+        howMany.put(BlockOfProperties.ORANGE,100);
+        howMany.put(BlockOfProperties.GREEN,200);
+        howMany.put(BlockOfProperties.YELLOW,150);
+        howMany.put(BlockOfProperties.LIGHT_BLUE,50);
+        game.setHowManyYouNeedToBuildHouse(howMany);
     }
 
     private void createMap(Game game) {
@@ -78,29 +116,17 @@ public class GameService {
         game.setChances(chanceService.generateStack(game));
         game.setGamers(gamerService.createGamerList(countOfGamers, game));
         game.setBank(bankService.createBank(game));
+        createHowManyForHouse();
+
+
     }
 
     public void start(int countOfGamers) throws Exception {
-
         creatingGame(countOfGamers);
-
-        cellService.canBuy(game, game.getStart().getNextCell());
-        System.out.println(game.getBank().getAllCardInBank().get(BlockOfProperties.BROWN).toArray().length);
-
-        //gamerService.step(game.getGamers().get(1),throwCubes());
-
-        // System.out.println(game.getGamers().get(1).getCurrent().toString());
-        System.out.println(game.getGamers().toString());
         play();
     }
-//    private void changeQueue(){
-//        Queue<Gamer> gamers = game.getPlayerMoves();
-//        game.setPlayerMoves(game.getSecondPlayerMoves());
-//        game.setSecondPlayerMoves(gamers);
-//    }
-
+/* игра */
     public void play() throws Exception{
-        int changeQueue = 0;
     while (game.getPlayerMoves().size()>1){
         Gamer gamer = game.getPlayerMoves().poll();
         game.getPlayerMoves().offer(gamer);
@@ -108,28 +134,10 @@ public class GameService {
             gamerService.makeNextSkipOrNotSkip(game,gamer);
         }else {
            gamerService.doSomething(gamer, game);
-
-
-//            if (!game.getGamers().contains(gamer)) {
-//                continue;
-//            }
         }
-       // Thread.sleep(1000);
-//        if(canStepNext){
-//            game.getSecondPlayerMoves().offer(gamer);
-//        }else {
-//            game.getPlayerMoves().offer(gamer);
-//        }
-
-//        changeQueue++;
-//        //System.out.println(countOfGamers + " " + changeQueue);
-//       // System.out.println(game.getGamers().size());
-//        if(changeQueue==game.getGamers().size() || game.getPlayerMoves().isEmpty()){
-//            changeQueue=0;
-//            changeQueue();
-//        }
+      //Thread.sleep(1000);
     }
-        System.out.println(game.getPlayerMoves().poll().getName() + " выиграл");
+        System.out.println(game.getPlayerMoves().poll().getName() + " выиграл!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
 }

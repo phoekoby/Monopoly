@@ -9,6 +9,11 @@ import Monopoly.models.Game;
 import java.util.*;
 
 public class BankService {
+    private Bank bank ;
+
+    public Bank getBank() {
+        return bank;
+    }
 
     public Bank createBank(Game game){
         Cell cell = game.getStart().getNextCell();
@@ -28,9 +33,12 @@ public class BankService {
 
 
         game.setAllCards(allCardsToGAme);
-
-        return new Bank(allcards);
+        bank = new Bank(allcards);
+        return bank;
     }
+    /*
+    Аукцион
+     */
     public void auction(Cell cell, Game game, GamerService gamerService) throws Exception {
         int price = 10;
         Queue<Gamer> gamers= new LinkedList<>();
@@ -48,10 +56,15 @@ public class BankService {
                 gamers.offer(gamer);
             }
         }
-        if(price==10) return;
         gamer = gamers.poll();
+        if(price==10) {
+            price+=gamerService.doBit(gamer,price,cell,game);
+            if(price==10){
+                return;
+            }
+        }
         System.out.println("Игрок " + gamer.getName() + " выигрывает " + cell.getName() + " на аукционе");
-        gamerService.buy(gamer,game,cell);
+        gamerService.buy(gamer,game,cell, price);
 
     }
 }

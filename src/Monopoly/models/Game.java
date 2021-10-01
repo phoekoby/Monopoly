@@ -21,8 +21,9 @@ public class Game {
     private Map<Gamer,Cell> location;
     private Queue<Gamer> playerMoves;
     private Map<Gamer, Boolean> canGamerDoStep = new HashMap<>();
-
-
+    private Map<Cell, Integer> houses = new HashMap<>();
+    private Map<Cell,Integer> hotels = new HashMap<>();
+    private Map<Cell, Integer> howManyToPayRenta = new HashMap<>();
     private Bank bank;
     private Queue<ChanceCard> chances;
 
@@ -46,6 +47,29 @@ public class Game {
         return playerMoves;
     }
 
+    public Map<Cell, Integer> getHouses() {
+        return houses;
+    }
+
+    public Map<Cell, Integer> getHotels() {
+        return hotels;
+    }
+
+    public Map<Cell, Integer> getHowManyToPayRenta() {
+        return howManyToPayRenta;
+    }
+
+    public void setHowManyToPayRenta(Map<Cell, Integer> howManyToPayRenta) {
+        this.howManyToPayRenta = howManyToPayRenta;
+    }
+
+    public void setHouses(Map<Cell, Integer> houses) {
+        this.houses = houses;
+    }
+
+    public void setHotels(Map<Cell, Integer> hotels) {
+        this.hotels = hotels;
+    }
 
     public void setPlayerMoves(Queue<Gamer> playerMoves) {
         this.playerMoves = playerMoves;

@@ -12,7 +12,7 @@ import java.util.*;
 public class CellServices {
 
 
-
+/* можно ли купить карточку?*/
     public boolean canBuy(Game game, Cell card) throws Exception {
         if(card.getCellType()!= CellType.STREET&&card.getCellType()!=CellType.STATION&&card.getCellType()!=CellType.UTILITY){
             throw new Exception("Эта карточка не является имуществом");
@@ -25,28 +25,7 @@ public class CellServices {
             return false;
         }
     }
-    public Gamer whoIsOwner(Game game, Cell cell){
-        return game.getCardsAndOwners().get(cell);
-    }
-
-
-
-//
-//    /**
-//     * Метод добавляет карточку в словарь карточек класса Gamer
-//     **/
-//    private void addToOwnGamersCard_ForGamer(Gamer gamer,Game game, Cell cell) {
-//        if (game.getPlayersAndHisCards().get(gamer).containsKey(cell.getBlockOfProperties())) {
-//            game.getPlayersAndHisCards().get(gamer).get(cell.getBlockOfProperties()).add(cell);
-//        } else {
-//            game.getPlayersAndHisCards().get(gamer).put(cell.getBlockOfProperties(),new HashSet<>());
-//            game.getPlayersAndHisCards().get(gamer).get(cell.getBlockOfProperties()).add(cell);
-//        }
-//    }
-
-    /**
-     * Метод добавляет карточку в словарь карточек класса Game
-     **/
+/* Добавление купленной карточки в словарь имющихся у игроков карт*/
     public void addToPlayersAndHisCards_ForGame(Gamer gamer, Game game, Cell cell) {
         Map<BlockOfProperties, Set<Cell>> gamerMap = game.getPlayersAndHisCards().get(gamer);
         if (gamerMap.containsKey(cell.getBlockOfProperties())) {
