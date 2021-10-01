@@ -9,6 +9,7 @@ import java.util.*;
 
 
 public class Game {
+    private Map<BlockOfProperties,List<Cell>> allCards;
     private GameState gameState;
     private List<Gamer> gamers;
     private Cell start;
@@ -24,6 +25,14 @@ public class Game {
 
     private Bank bank;
     private Queue<ChanceCard> chances;
+
+    public Map<BlockOfProperties, List<Cell>> getAllCards() {
+        return allCards;
+    }
+
+    public void setAllCards(Map<BlockOfProperties, List<Cell>> allCards) {
+        this.allCards = allCards;
+    }
 
     public Cell getJail() {
         return jail;

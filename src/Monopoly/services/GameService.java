@@ -17,6 +17,7 @@ public class GameService {
 
     public GameService(Game game) {
     this.game=game;
+    game.setCardsAndOwners(new HashMap<>());
     }
 
 
@@ -100,7 +101,7 @@ public class GameService {
 
     public void play() throws Exception{
         int changeQueue = 0;
-    while (game.getGamers().size()>1 && !game.getPlayerMoves().isEmpty()){
+    while (game.getPlayerMoves().size()>1){
         Gamer gamer = game.getPlayerMoves().poll();
         game.getPlayerMoves().offer(gamer);
         if(!game.getCanGamerDoStep().get(gamer)){
@@ -113,7 +114,7 @@ public class GameService {
 //                continue;
 //            }
         }
-        Thread.sleep(1000);
+       // Thread.sleep(1000);
 //        if(canStepNext){
 //            game.getSecondPlayerMoves().offer(gamer);
 //        }else {
@@ -128,6 +129,7 @@ public class GameService {
 //            changeQueue();
 //        }
     }
+        System.out.println(game.getPlayerMoves().poll().getName() + " выиграл");
     }
 
 }

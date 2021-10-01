@@ -1,38 +1,57 @@
 package Monopoly.services;
 
 import Monopoly.models.Bank;
+import Monopoly.models.Gamer;
 import Monopoly.models.cells.*;
 import Monopoly.models.Game;
 
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class BankService {
 
     public Bank createBank(Game game){
         Cell cell = game.getStart().getNextCell();
         Map<BlockOfProperties,Set<Cell>> allcards = new HashMap<>();
+        Map<BlockOfProperties,List<Cell>> allCardsToGAme = new HashMap<>();
         while (cell!= game.getStart()){
             if(cell.getCellType().equals(CellType.STREET)||cell.getCellType().equals(CellType.STATION)||cell.getCellType().equals(CellType.UTILITY)){
-                if(allcards.containsKey(cell.getBlockOfProperties())){
-                    allcards.get(cell.getBlockOfProperties()).add(cell);
-                }else{
+                if(!allcards.containsKey(cell.getBlockOfProperties())){
                     allcards.put(cell.getBlockOfProperties(),new HashSet<>());
-                    allcards.get(cell.getBlockOfProperties()).add(cell);
+                    allCardsToGAme.put(cell.getBlockOfProperties(), new ArrayList<>());
                 }
+                allcards.get(cell.getBlockOfProperties()).add(cell);
+                allCardsToGAme.get(cell.getBlockOfProperties()).add(cell);
             }
             cell=cell.getNextCell();
         }
 
 
+        game.setAllCards(allCardsToGAme);
 
         return new Bank(allcards);
     }
-    public void auction(Cell cell){
+    public void auction(Cell cell, Game game, GamerService gamerService) throws Exception {
         int price = 10;
+        Queue<Gamer> gamers= new LinkedList<>();
+        for(int i = 0; i < game.getGamers().size();i++){
+            gamers.offer(game.getGamers().get(i));
+        }
+        Gamer gamer;
+        while (gamers.size()>1){
+           gamer= gamers.poll();
+            int sum = gamerService.doBit(gamer,price, cell, game);
+            if(sum==0){
+                continue;
+            }else {
+                price+=sum;
+                gamers.offer(gamer);
+            }
+        }
+        if(price==10) return;
+        gamer = gamers.poll();
+        System.out.println("Игрок " + gamer.getName() + " выигрывает " + cell.getName() + " на аукционе");
+        gamerService.buy(gamer,game,cell);
 
     }
 }

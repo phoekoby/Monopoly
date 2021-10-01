@@ -17,25 +17,20 @@ public class CellServices {
         if(card.getCellType()!= CellType.STREET&&card.getCellType()!=CellType.STATION&&card.getCellType()!=CellType.UTILITY){
             throw new Exception("Эта карточка не является имуществом");
         }
-        System.out.println(game.getBank().getAllCardInBank().get(card.getBlockOfProperties()).toString());
+       // System.out.println(game.getBank().getAllCardInBank().get(card.getBlockOfProperties()).toString());
         if (game.getBank().getAllCardInBank().get(card.getBlockOfProperties()).contains(card)) {
-            System.out.println("true");
+           // System.out.println("true");
             return true;
         } else {
             return false;
         }
     }
-
-
-    public void buy(Gamer gamer, Game game, Cell cell) throws Exception {
-        if (!canBuy(game, cell)) {
-            throw new Exception("Нельзя купить карту, заплатите ипотеку");
-        }
-        gamer.setMoney(gamer.getMoney() - cell.getPrice());
-        game.getBank().getAllCardInBank().get(cell.getBlockOfProperties()).remove(cell);
-
-        addToPlayersAndHisCards_ForGame(gamer, game, cell);
+    public Gamer whoIsOwner(Game game, Cell cell){
+        return game.getCardsAndOwners().get(cell);
     }
+
+
+
 //
 //    /**
 //     * Метод добавляет карточку в словарь карточек класса Gamer
@@ -52,7 +47,7 @@ public class CellServices {
     /**
      * Метод добавляет карточку в словарь карточек класса Game
      **/
-    private void addToPlayersAndHisCards_ForGame(Gamer gamer, Game game, Cell cell) {
+    public void addToPlayersAndHisCards_ForGame(Gamer gamer, Game game, Cell cell) {
         Map<BlockOfProperties, Set<Cell>> gamerMap = game.getPlayersAndHisCards().get(gamer);
         if (gamerMap.containsKey(cell.getBlockOfProperties())) {
             gamerMap.get(cell.getBlockOfProperties()).add(cell);
@@ -61,6 +56,7 @@ public class CellServices {
             gamerMap.get(cell.getBlockOfProperties()).add(cell);
         }
         game.getCardsAndOwners().put(cell, gamer);
+        game.getCardsAndOwners().put(cell,gamer);
     }
 
 

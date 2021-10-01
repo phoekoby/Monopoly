@@ -27,12 +27,12 @@ public class ChanceService {
         chanceCards.offer(card);
         return card;
     }
-    public void gamerCameOnChance(Game game, Gamer gamer, GamerService gamerService){
+    public void gamerCameOnChance(Game game, Gamer gamer, GamerService gamerService) throws Exception{
         ChanceCard card = getCardFromStack(game.getChances());
         System.out.println("Игрок вытаскивает карточку: " + card.getMessage());
         switch (card.getType()){
-            case TAX -> gamerService.recalculationMoney(gamer,-card.getCountOfMoneyOrSteps());
-            case GIFT -> gamerService.recalculationMoney(gamer,card.getCountOfMoneyOrSteps());
+            case TAX -> gamerService.recalculationMoney(game,gamer,-card.getCountOfMoneyOrSteps());
+            case GIFT -> gamerService.recalculationMoney(game,gamer,card.getCountOfMoneyOrSteps());
             case DO_STEPS -> {gamerService.checkWhichCardAndWhatToDo(game,gamer,gamerService.step(game,gamer,card.getCountOfMoneyOrSteps()));}
             case GO_TO_JAIL -> gamerService.gamerGoTo(game,gamer,card.getGo_to());
             case SKIP -> gamerService.makeNextSkipOrNotSkip(game,gamer);
