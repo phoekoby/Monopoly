@@ -42,9 +42,13 @@ public class BankService {
     public void auction(Cell cell, Game game, GamerService gamerService) throws Exception {
         int price = 10;
         Queue<Gamer> gamers= new LinkedList<>();
-        for(int i = 0; i < game.getGamers().size();i++){
-            gamers.offer(game.getGamers().get(i));
+        Gamer gamerK = game.getPlayerMoves().poll();
+        game.getPlayerMoves().offer(gamerK);
+        while (game.getPlayerMoves().peek()!=gamerK){
+            gamers.offer(game.getPlayerMoves().peek());
+            game.getPlayerMoves().offer(game.getPlayerMoves().poll());
         }
+
         Gamer gamer;
         while (gamers.size()>1){
            gamer= gamers.poll();

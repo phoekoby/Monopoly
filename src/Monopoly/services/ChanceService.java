@@ -20,6 +20,7 @@ public class ChanceService {
         stack.offer(new ChanceCard(TypeOfChance.DO_STEPS,"Пройдите на три клетки вперед", 3));
         stack.offer(new ChanceCard(TypeOfChance.TAX, "Оплатите страхову в размере 100 долларов",100));
         stack.offer(new ChanceCard(TypeOfChance.GIFT, "Получите 300 долларов от страховой компании",300));
+        stack.offer(new ChanceCard(TypeOfChance.TAX, "Вы получаете штраф ф размере 350 долларов",350));
         return stack;
     }
     public ChanceCard getCardFromStack(Queue<ChanceCard> chanceCards){
@@ -37,7 +38,6 @@ public class ChanceService {
             case GO_TO_JAIL -> gamerService.gamerGoTo(game,gamer,card.getGo_to());
             case SKIP -> gamerService.makeNextSkipOrNotSkip(game,gamer);
             case GO_TO -> gamerService.gamerGoTo(game,gamer, card.getGo_to());
-            //case
         }
 
     }

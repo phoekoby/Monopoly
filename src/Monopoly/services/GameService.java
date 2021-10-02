@@ -114,7 +114,7 @@ public class GameService {
     public void creatingGame(int countOfGamers) throws Exception {
         createMap(game);
         game.setChances(chanceService.generateStack(game));
-        game.setGamers(gamerService.createGamerList(countOfGamers, game));
+      gamerService.createGamerList(countOfGamers, game);
         game.setBank(bankService.createBank(game));
         createHowManyForHouse();
 
@@ -135,7 +135,7 @@ public class GameService {
         }else {
            gamerService.doSomething(gamer, game);
         }
-      //Thread.sleep(1000);
+     // Thread.sleep(2000);
     }
         System.out.println(game.getPlayerMoves().poll().getName() + " выиграл!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }

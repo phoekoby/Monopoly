@@ -7,8 +7,6 @@ import java.util.Set;
 public class Main {
     public static void main(String[] args) throws Exception{
 
-        System.out.println(new Game().toString());
-        Set<Integer> s = new HashSet<>();
 
         Game game = new Game();
         GameService gameService = new GameService(game);

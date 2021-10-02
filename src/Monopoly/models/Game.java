@@ -10,20 +10,17 @@ import java.util.*;
 
 public class Game {
     private Map<BlockOfProperties,List<Cell>> allCards;
-    private GameState gameState;
-    private List<Gamer> gamers;
     private Cell start;
     private Cell jail;
     private Map<Gamer, Cell> gamersLocation;
     private Map<Cell, Gamer> cardsAndOwners;
     private Map<Gamer, Map<BlockOfProperties, Set<Cell>>> playersAndHisCards;
     private Map<BlockOfProperties, Integer> howManyYouNeedToBuildHouse;
-    private Map<Gamer,Cell> location;
     private Queue<Gamer> playerMoves;
-    private Map<Gamer, Boolean> canGamerDoStep = new HashMap<>();
-    private Map<Cell, Integer> houses = new HashMap<>();
-    private Map<Cell,Integer> hotels = new HashMap<>();
-    private Map<Cell, Integer> howManyToPayRenta = new HashMap<>();
+    private final Map<Gamer, Boolean> canGamerDoStep = new HashMap<>();
+    private final Map<Cell, Integer> houses = new HashMap<>();
+    private final Map<Cell,Integer> hotels = new HashMap<>();
+    private final Map<Cell, Integer> howManyToPayRenta = new HashMap<>();
     private Bank bank;
     private Queue<ChanceCard> chances;
 
@@ -59,17 +56,6 @@ public class Game {
         return howManyToPayRenta;
     }
 
-    public void setHowManyToPayRenta(Map<Cell, Integer> howManyToPayRenta) {
-        this.howManyToPayRenta = howManyToPayRenta;
-    }
-
-    public void setHouses(Map<Cell, Integer> houses) {
-        this.houses = houses;
-    }
-
-    public void setHotels(Map<Cell, Integer> hotels) {
-        this.hotels = hotels;
-    }
 
     public void setPlayerMoves(Queue<Gamer> playerMoves) {
         this.playerMoves = playerMoves;
@@ -79,9 +65,7 @@ public class Game {
         return canGamerDoStep;
     }
 
-    public void setCanGamerDoStep(Map<Gamer, Boolean> canGamerDoStep) {
-        this.canGamerDoStep = canGamerDoStep;
-    }
+
 
     public void setBank(Bank bank) {
         this.bank = bank;
@@ -91,9 +75,7 @@ public class Game {
         return bank;
     }
 
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
-    }
+
 
     public void setPlayersAndHisCards(Map<Gamer, Map<BlockOfProperties,Set<Cell>>> playersAndHisCards) {
         this.playersAndHisCards = playersAndHisCards;
@@ -103,14 +85,8 @@ public class Game {
         this.howManyYouNeedToBuildHouse = howManyYouNeedToBuildHouse;
     }
 
-    public List<Gamer> getGamers() {
-        return gamers;
-    }
 
 
-    public GameState getGameState() {
-        return gameState;
-    }
 
     public Map<Gamer, Map<BlockOfProperties,Set<Cell>> >getPlayersAndHisCards() {
         return playersAndHisCards;
@@ -120,9 +96,6 @@ public class Game {
         return howManyYouNeedToBuildHouse;
     }
 
-    public void setGamerState(GameState gameState) {
-        this.gameState = gameState;
-    }
 
 
 
@@ -132,11 +105,6 @@ public class Game {
 
 
 
-    public GameState getGamerState() {
-        return gameState;
-    }
-
-
 
 
 
@@ -144,9 +112,7 @@ public class Game {
         return cardsAndOwners;
     }
 
-    public void setGamers(List<Gamer> gamers) {
-        this.gamers = gamers;
-    }
+
 
     public void setStart(Cell start) {
         this.start = start;
@@ -156,9 +122,7 @@ public class Game {
         this.gamersLocation = gamersLocation;
     }
 
-    public void setLocation(Map<Gamer, Cell> location) {
-        this.location = location;
-    }
+
 
     public void setChances(Queue<ChanceCard> chances) {
         this.chances = chances;
@@ -172,9 +136,7 @@ public class Game {
         return gamersLocation;
     }
 
-    public Map<Gamer, Cell> getLocation() {
-        return location;
-    }
+
 
     public Queue<ChanceCard> getChances() {
         return chances;

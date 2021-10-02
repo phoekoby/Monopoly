@@ -25,20 +25,20 @@ private final GameService gameService ;
     /*
               Создаем список игроков и заполняем их начальными значениями
              */
-    public LinkedList<Gamer> createGamerList(int count, Game game) throws Exception {
+    public void createGamerList(int count, Game game) throws Exception {
         if (count <= 1 || count > 6) {
             throw new Exception("Неккоректно число игроков");
         }
         Map<Gamer, Map<BlockOfProperties, Set<Cell>>> gamersCards = new HashMap<>();
         Map<Gamer, Cell> location = new HashMap<>();
-        LinkedList<Gamer> gamers = new LinkedList<>();
+        //LinkedList<Gamer> gamers = new LinkedList<>();
         Queue<Gamer> queuegamers = new LinkedList<>();
         for (int i = 0; i < count; i++) {
             Gamer gamer = new Gamer("Player " + (i + 1), 1500);
             game.getCanGamerDoStep().put(gamer, true);
             location.put(gamer, game.getStart());
             queuegamers.offer(gamer);
-            gamers.add(gamer);
+           // gamers.add(gamer);
             gamersCards.put(gamer, new HashMap<>());
         }
 
@@ -47,7 +47,7 @@ private final GameService gameService ;
         game.setGamersLocation(location);
         game.setPlayersAndHisCards(gamersCards);
 
-        return gamers;
+       // return gamers;
     }
 
     /* Бросание кубиков */
@@ -175,7 +175,7 @@ private final GameService gameService ;
             }
             case START -> {
                 System.out.println("Игрок " + gamer.getName() + " попал на " + current.getName() + " и получил 200 долларов");
-                recalculationMoney(game, gamer, current.getPrice());
+                recalculationMoney(game, gamer, 200);
 
             }
             case CHANCE -> {
@@ -295,7 +295,7 @@ private final GameService gameService ;
         if (gamer.getMoney() - aucion < 500 || !needIThisCard(cell, gamer, game)) {
             return 0;
         }
-        int result = (int) ((gamer.getMoney() - aucion) * 0.1);
+        int result = aucion + (int)(aucion*1.5);
         return result;
     }
 
