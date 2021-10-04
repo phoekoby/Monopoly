@@ -50,71 +50,9 @@ private final GameService gameService ;
        // return gamers;
     }
 
-    /* Бросание кубиков */
-    private int throwCubes() {
-        int max_for_throw_cubes = 12;
-        int min_for_throw_cubes = 2;
-        max_for_throw_cubes -= min_for_throw_cubes;
-        return (int) ((Math.random() * ++max_for_throw_cubes) + min_for_throw_cubes);
-    }
-
-    /* Перерасчет денег */
-    public void recalculationMoney(Game game, Gamer gamer, int money) {
-        if (gamer.getMoney() + money < 0) {
-            recalculationMoney(game,gamer,gamer.getMoney());
-            System.out.println(gamer.getName() + " отдает последние " + gamer.getMoney() + " и Вылетает из игры !!!!!!!!!!!!!!!!!!!!");
-            gameOver(game, gamer);
-            return;
-        }
-        gamer.setMoney(gamer.getMoney() + money);
-    }
-
-    /* Плата другому игроку */
-    public void payToOtherGamer(Game game, Gamer from, Gamer to, int howMuch) {
-        if (from.getMoney() - howMuch < 0) {
-            recalculationMoney(game,to,from.getMoney());
-
-
-            System.out.println(from.getName() + " отдает последние " + from.getMoney() + " игроку " + to.getName() +  " и  Вылетает из игры !!!!!!!!!!!!!!!!!!!!");
-            recalculationMoney(game,from, -from.getMoney());
-            gameOver(game, from);
-            return;
-        }
-
-        System.out.println(from.getName() + " платит " + to.getName() + " " + howMuch);
-        recalculationMoney(game, from, -howMuch);
-        recalculationMoney(game, to, howMuch);
-    }
-
-    /* Удаление игрока из очереди игры */
-    private void gameOver(Game game, Gamer gamer) {
-        Gamer gamer1 = game.getPlayerMoves().poll();
-        while (gamer1 != gamer) {
-            game.getPlayerMoves().offer(gamer1);
-            gamer1 = game.getPlayerMoves().poll();
-        }
-        game.getGamersLocation().remove(gamer1);
-        for(BlockOfProperties b: game.getPlayersAndHisCards().get(gamer).keySet()){
-            for(Cell c : game.getPlayersAndHisCards().get(gamer).get(b)){
-                game.getHouses().remove(c);
-                game.getHouses().put(c,0);
-                game.getHowManyToPayRenta().remove(c);
-                game.getHowManyToPayRenta().put(c,c.getPrice());
-                game.getCardsAndOwners().remove(c);
-                gameService.getBankService().getBank().getAllCardInBank().get(b).add(c);
-            }
-           //gameService.getBankService().getBank().getAllCardInBank().put(b,game.getPlayersAndHisCards().get(gamer).get(b));
-
-
-        }
-
-        game.getPlayersAndHisCards().remove(gamer);
-
-    }
-
     /*
-    Начинается ход игрока gamer
-     */
+  Начинается ход игрока gamer
+   */
     public void doSomething(Gamer gamer, Game game) throws Exception {
         System.out.println("Ход игрока " + gamer.getName() + " Баланс:" + gamer.getMoney());
         buyHouses(game, gamer);
@@ -125,10 +63,16 @@ private final GameService gameService ;
         System.out.println("Баланс " + gamer.getMoney());
         System.out.println("\n\n\n\n");
     }
-
+    /* Бросание кубиков */
+    private int throwCubes() {
+        int max_for_throw_cubes = 12;
+        int min_for_throw_cubes = 2;
+        max_for_throw_cubes -= min_for_throw_cubes;
+        return (int) ((Math.random() * ++max_for_throw_cubes) + min_for_throw_cubes);
+    }
     /*
-    Идем на какое-то поле goTo
-     */
+Идем на какое-то поле goTo
+ */
     public void gamerGoTo(Game game, Gamer gamer, Cell goTo) throws Exception {
         game.getGamersLocation().remove(gamer);
         game.getGamersLocation().put(gamer, goTo);
@@ -155,7 +99,6 @@ private final GameService gameService ;
         game.getGamersLocation().put(gamer, cell);
         return cell;
     }
-
     /*
     Проверяем на какую карту попали и что будем делать
      */
@@ -193,7 +136,6 @@ private final GameService gameService ;
             }
         }
     }
-
     /*
     Что делаем, если попали ка карточку имущества
      */
@@ -211,7 +153,54 @@ private final GameService gameService ;
 
         }
     }
+    /* Перерасчет денег */
+    public void recalculationMoney(Game game, Gamer gamer, int money) {
+        if (gamer.getMoney() + money < 0) {
+            recalculationMoney(game,gamer,gamer.getMoney());
+            System.out.println(gamer.getName() + " отдает последние " + gamer.getMoney() + " и Вылетает из игры !!!!!!!!!!!!!!!!!!!!");
+            gameOver(game, gamer);
+            return;
+        }
+        gamer.setMoney(gamer.getMoney() + money);
+    }
+    /* Плата другому игроку */
+    public void payToOtherGamer(Game game, Gamer from, Gamer to, int howMuch) {
+        if (from.getMoney() - howMuch < 0) {
+            recalculationMoney(game,to,from.getMoney());
 
+
+            System.out.println(from.getName() + " отдает последние " + from.getMoney() + " игроку " + to.getName() +  " и  Вылетает из игры !!!!!!!!!!!!!!!!!!!!");
+            recalculationMoney(game,from, -from.getMoney());
+            gameOver(game, from);
+            return;
+        }
+
+        System.out.println(from.getName() + " платит " + to.getName() + " " + howMuch);
+        recalculationMoney(game, from, -howMuch);
+        recalculationMoney(game, to, howMuch);
+    }
+
+    /* Удаление игрока из очереди игры */
+    private void gameOver(Game game, Gamer gamer) {
+        Gamer gamer1 = game.getPlayerMoves().poll();
+        while (gamer1 != gamer) {
+            game.getPlayerMoves().offer(gamer1);
+            gamer1 = game.getPlayerMoves().poll();
+        }
+        game.getGamersLocation().remove(gamer1);
+        for(BlockOfProperties b: game.getPlayersAndHisCards().get(gamer).keySet()){
+            for(Cell c : game.getPlayersAndHisCards().get(gamer).get(b)){
+                game.getHouses().remove(c);
+                game.getHouses().put(c,0);
+                game.getHowManyToPayRenta().remove(c);
+                game.getHowManyToPayRenta().put(c,c.getPrice());
+                game.getCardsAndOwners().remove(c);
+                gameService.getBankService().getBank().getAllCardInBank().get(b).add(c);
+            }
+        }
+
+        game.getPlayersAndHisCards().remove(gamer);
+    }
     /*
     Есть ли полный набор карточек одного блока(для постройки домов)
      */
@@ -236,7 +225,6 @@ private final GameService gameService ;
             }
         }
     }
-
     /*
     Устанавливаем пропуск хода игроку
      */
@@ -258,14 +246,12 @@ private final GameService gameService ;
         }
         return true;
     }
-
     /*
     Проверяет нужна ли эта карточка
      */
     public boolean needIThisCard(Cell cell, Gamer gamer, Game game) {
         return checkGamersCards(gamer, cell, game) && gamer.getMoney() - cell.getPrice() > 500;
     }
-
     /*
     Покупает карточку
      */
@@ -287,7 +273,6 @@ private final GameService gameService ;
         }
         System.out.println("Игрок " + gamer.getName() + " покупает " + cell.getName() + " за " + (price==0?cell.getPrice():price));
     }
-
     /*
     Делает ставку на аукционе
      */

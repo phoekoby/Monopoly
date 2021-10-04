@@ -10,8 +10,6 @@ import Monopoly.models.cells.CellType;
 import java.util.*;
 
 public class CellServices {
-
-
 /* можно ли купить карточку?*/
     public boolean canBuy(Game game, Cell card) throws Exception {
         if(card.getCellType()!= CellType.STREET&&card.getCellType()!=CellType.STATION&&card.getCellType()!=CellType.UTILITY){
@@ -37,6 +35,4 @@ public class CellServices {
         game.getCardsAndOwners().put(cell, gamer);
         game.getCardsAndOwners().put(cell,gamer);
     }
-
-
 }

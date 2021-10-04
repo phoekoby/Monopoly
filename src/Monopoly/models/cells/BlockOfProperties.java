@@ -12,12 +12,12 @@ public enum BlockOfProperties {
     UTILITY(2),
     STATION(4),
     NONE(0);
-    private int i ;
-    BlockOfProperties(int i) {
-      this.i=i;
+    private int howMachHousesCanBuild ;
+    BlockOfProperties(int howMachHousesCanBuild) {
+      this.howMachHousesCanBuild=howMachHousesCanBuild;
     }
     public int getI(){
-        return this.i;
+        return this.howMachHousesCanBuild;
     }
 
 }

@@ -117,14 +117,11 @@ public class GameService {
       gamerService.createGamerList(countOfGamers, game);
         game.setBank(bankService.createBank(game));
         createHowManyForHouse();
-
-
     }
-
     public void start(int countOfGamers) throws Exception {
         creatingGame(countOfGamers);
         play();
-    }
+        }
 /* игра */
     public void play() throws Exception{
     while (game.getPlayerMoves().size()>1){
@@ -135,7 +132,7 @@ public class GameService {
         }else {
            gamerService.doSomething(gamer, game);
         }
-     // Thread.sleep(2000);
+      Thread.sleep(2000);
     }
         System.out.println(game.getPlayerMoves().poll().getName() + " выиграл!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
