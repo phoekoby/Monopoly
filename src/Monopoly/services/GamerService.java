@@ -10,17 +10,7 @@ import Monopoly.models.cells.CellType;
 import java.util.*;
 
 public class GamerService {
-    private final ChanceService chanceService = new ChanceService();
-    private final CellServices cellServices = new CellServices();
-    private final BankService bankService = new BankService();
-    private final StreetService streetService = new StreetService();
-    private final UtilityAndStationService utilityAndStationService = new UtilityAndStationService();
 
-private final GameService gameService ;
-
-    public GamerService(GameService gameService) {
-        this.gameService = gameService;
-    }
 
     /*
               Создаем список игроков и заполняем их начальными значениями
@@ -38,7 +28,7 @@ private final GameService gameService ;
             game.getCanGamerDoStep().put(gamer, true);
             location.put(gamer, game.getStart());
             queuegamers.offer(gamer);
-           // gamers.add(gamer);
+            // gamers.add(gamer);
             gamersCards.put(gamer, new HashMap<>());
         }
 
@@ -47,22 +37,26 @@ private final GameService gameService ;
         game.setGamersLocation(location);
         game.setPlayersAndHisCards(gamersCards);
 
-       // return gamers;
+        // return gamers;
     }
 
     /*
   Начинается ход игрока gamer
    */
-    public void doSomething(Gamer gamer, Game game) throws Exception {
+    public void doSomething(Gamer gamer, Game game, ChanceService chanceService,
+                            BankService bankService, CellServices cellServices, StreetService streetService,
+                            UtilityAndStationService utilityAndStationService) throws Exception {
         System.out.println("Ход игрока " + gamer.getName() + " Баланс:" + gamer.getMoney());
-        buyHouses(game, gamer);
+        buyHouses(game, gamer, streetService);
         int cubesResult = throwCubes();
         System.out.println("Игрок " + gamer.getName() + " бросает кости и получает число " + cubesResult);
         Cell current = step(game, gamer, cubesResult);
-        checkWhichCardAndWhatToDo(game, gamer, current);
+        checkWhichCardAndWhatToDo(game, gamer, current, chanceService, bankService,
+                cellServices, streetService, utilityAndStationService);
         System.out.println("Баланс " + gamer.getMoney());
         System.out.println("\n\n\n\n");
     }
+
     /* Бросание кубиков */
     private int throwCubes() {
         int max_for_throw_cubes = 12;
@@ -70,16 +64,20 @@ private final GameService gameService ;
         max_for_throw_cubes -= min_for_throw_cubes;
         return (int) ((Math.random() * ++max_for_throw_cubes) + min_for_throw_cubes);
     }
+
     /*
 Идем на какое-то поле goTo
  */
-    public void gamerGoTo(Game game, Gamer gamer, Cell goTo) throws Exception {
+    public void gamerGoTo(Game game, Gamer gamer, Cell goTo, ChanceService chanceService,
+                          BankService bankService, CellServices cellServices, StreetService streetService,
+                          UtilityAndStationService utilityAndStationService) throws Exception {
         game.getGamersLocation().remove(gamer);
         game.getGamersLocation().put(gamer, goTo);
         if (goTo == game.getJail()) {
             makeNextSkipOrNotSkip(game, gamer);
         } else {
-            checkWhichCardAndWhatToDo(game, gamer, goTo);
+            checkWhichCardAndWhatToDo(game, gamer, goTo, chanceService, bankService,
+                    cellServices, streetService, utilityAndStationService);
         }
     }
 
@@ -99,15 +97,18 @@ private final GameService gameService ;
         game.getGamersLocation().put(gamer, cell);
         return cell;
     }
+
     /*
     Проверяем на какую карту попали и что будем делать
      */
-    public void checkWhichCardAndWhatToDo(Game game, Gamer gamer, Cell current) throws Exception {
+    public void checkWhichCardAndWhatToDo(Game game, Gamer gamer, Cell current, ChanceService chanceService,
+                                          BankService bankService, CellServices cellServices, StreetService streetService,
+                                          UtilityAndStationService utilityAndStationService) throws Exception {
         switch (current.getCellType()) {
 
             case GO_TO_JAIL -> {
                 System.out.println("Игрок " + gamer.getName() + " отправляется в тюрьму");
-                gamerGoTo(game, gamer, game.getJail());
+                gamerGoTo(game, gamer, game.getJail(), chanceService, bankService, cellServices, streetService, utilityAndStationService);
 
             }
             case TAX -> {
@@ -123,12 +124,12 @@ private final GameService gameService ;
             }
             case CHANCE -> {
                 System.out.println("Игрок " + gamer.getName() + " попадает на " + current.getName());
-                chanceService.gamerCameOnChance(game, gamer, this);
+                chanceService.gamerCameOnChance(game, gamer, this, chanceService, bankService, cellServices, streetService, utilityAndStationService);
 
             }
             case STREET, STATION, UTILITY -> {
                 System.out.println("Игрок " + gamer.getName() + " попал на " + current.getName());
-                doingWhenOnProperty(gamer, current, game);
+                doingWhenOnProperty(gamer, current, game, bankService, cellServices, streetService, utilityAndStationService);
 
             }
             default -> {
@@ -136,41 +137,46 @@ private final GameService gameService ;
             }
         }
     }
+
     /*
     Что делаем, если попали ка карточку имущества
      */
-    public void doingWhenOnProperty(Gamer gamer, Cell cell, Game game) throws Exception {
-        if (gameService.getCellService().canBuy(game, cell)) {
+    public void doingWhenOnProperty(Gamer gamer, Cell cell, Game game, BankService bankService,
+                                    CellServices cellServices, StreetService streetService,
+                                    UtilityAndStationService utilityAndStationService) throws Exception {
+        if (cellServices.canBuy(game, cell)) {
             if (needIThisCard(cell, gamer, game)) {
-                buy(gamer, game, cell, 0);
+                buy(gamer, game, cell, 0, cellServices, streetService, utilityAndStationService);
             } else {
-                gameService.getBankService().auction(cell, game, this);
+                bankService.auction(cell, game, this, cellServices, streetService, utilityAndStationService);
             }
         } else {
             if (gamer != game.getCardsAndOwners().get(cell)) {
-                payToOtherGamer(game, gamer, game.getCardsAndOwners().get(cell), game.getHowManyToPayRenta().get(cell));
+                payToOtherGamer(game, gamer, game.getCardsAndOwners().get(cell), game.getHowManyToPayRenta().get(cell), bankService);
             }
 
         }
     }
+
     /* Перерасчет денег */
     public void recalculationMoney(Game game, Gamer gamer, int money) {
         if (gamer.getMoney() + money < 0) {
-            recalculationMoney(game,gamer,gamer.getMoney());
+            recalculationMoney(game, gamer, gamer.getMoney());
             System.out.println(gamer.getName() + " отдает последние " + gamer.getMoney() + " и Вылетает из игры !!!!!!!!!!!!!!!!!!!!");
             gameOver(game, gamer);
             return;
         }
         gamer.setMoney(gamer.getMoney() + money);
     }
+
     /* Плата другому игроку */
-    public void payToOtherGamer(Game game, Gamer from, Gamer to, int howMuch) {
+    public void payToOtherGamer(Game game, Gamer from, Gamer to, int howMuch, BankService bankService) {
         if (from.getMoney() - howMuch < 0) {
-            recalculationMoney(game,to,from.getMoney());
+            recalculationMoney(game, to, from.getMoney());
 
 
-            System.out.println(from.getName() + " отдает последние " + from.getMoney() + " игроку " + to.getName() +  " и  Вылетает из игры !!!!!!!!!!!!!!!!!!!!");
-            recalculationMoney(game,from, -from.getMoney());
+            System.out.println(from.getName() + " отдает последние " + from.getMoney() + " игроку " + to.getName() + " и  Вылетает из игры !!!!!!!!!!!!!!!!!!!!");
+            recalculationMoney(game, from, -from.getMoney());
             gameOver(game, from);
             return;
         }
@@ -188,19 +194,20 @@ private final GameService gameService ;
             gamer1 = game.getPlayerMoves().poll();
         }
         game.getGamersLocation().remove(gamer1);
-        for(BlockOfProperties b: game.getPlayersAndHisCards().get(gamer).keySet()){
-            for(Cell c : game.getPlayersAndHisCards().get(gamer).get(b)){
+        for (BlockOfProperties b : game.getPlayersAndHisCards().get(gamer).keySet()) {
+            for (Cell c : game.getPlayersAndHisCards().get(gamer).get(b)) {
                 game.getHouses().remove(c);
-                game.getHouses().put(c,0);
+                game.getHouses().put(c, 0);
                 game.getHowManyToPayRenta().remove(c);
-                game.getHowManyToPayRenta().put(c,c.getPrice());
+                game.getHowManyToPayRenta().put(c, c.getPrice());
                 game.getCardsAndOwners().remove(c);
-                gameService.getBankService().getBank().getAllCardInBank().get(b).add(c);
+                game.getBank().getAllCardInBank().get(b).add(c);
             }
         }
 
         game.getPlayersAndHisCards().remove(gamer);
     }
+
     /*
     Есть ли полный набор карточек одного блока(для постройки домов)
      */
@@ -214,7 +221,7 @@ private final GameService gameService ;
     /*
     Покупаем дома во время хода
      */
-    public void buyHouses(Game game, Gamer gamer) {
+    public void buyHouses(Game game, Gamer gamer, StreetService streetService) {
 
         for (BlockOfProperties b : game.getPlayersAndHisCards().get(gamer).keySet()) {
             for (Cell cell : game.getPlayersAndHisCards().get(gamer).get(b)) {
@@ -225,6 +232,7 @@ private final GameService gameService ;
             }
         }
     }
+
     /*
     Устанавливаем пропуск хода игроку
      */
@@ -246,16 +254,19 @@ private final GameService gameService ;
         }
         return true;
     }
+
     /*
     Проверяет нужна ли эта карточка
      */
     public boolean needIThisCard(Cell cell, Gamer gamer, Game game) {
         return checkGamersCards(gamer, cell, game) && gamer.getMoney() - cell.getPrice() > 500;
     }
+
     /*
     Покупает карточку
      */
-    public void buy(Gamer gamer, Game game, Cell cell, int price) throws Exception {
+    public void buy(Gamer gamer, Game game, Cell cell, int price, CellServices cellServices,
+                    StreetService streetService, UtilityAndStationService utilityAndStationService) throws Exception {
         if (!cellServices.canBuy(game, cell)) {
             throw new Exception("Нельзя купить карту, заплатите ипотеку");
         }
@@ -271,8 +282,9 @@ private final GameService gameService ;
         } else if (cell.getCellType() == CellType.STATION || cell.getCellType() == CellType.UTILITY) {
             utilityAndStationService.recalculationStationAndUtility(game, cell.getBlockOfProperties(), gamer);
         }
-        System.out.println("Игрок " + gamer.getName() + " покупает " + cell.getName() + " за " + (price==0?cell.getPrice():price));
+        System.out.println("Игрок " + gamer.getName() + " покупает " + cell.getName() + " за " + (price == 0 ? cell.getPrice() : price));
     }
+
     /*
     Делает ставку на аукционе
      */
@@ -280,7 +292,7 @@ private final GameService gameService ;
         if (gamer.getMoney() - aucion < 500 || !needIThisCard(cell, gamer, game)) {
             return 0;
         }
-        int result = aucion + (int)(aucion*1.5);
+        int result = aucion + (int) (aucion * 1.5);
         return result;
     }
 
