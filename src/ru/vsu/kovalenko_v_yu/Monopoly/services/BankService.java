@@ -1,9 +1,11 @@
-package Monopoly.services;
+package ru.vsu.kovalenko_v_yu.Monopoly.services;
 
-import Monopoly.models.Bank;
-import Monopoly.models.Gamer;
-import Monopoly.models.cells.*;
-import Monopoly.models.Game;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.Bank;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.Gamer;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.Game;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.BlockOfProperties;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.Cell;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.CellType;
 
 
 import java.util.*;
@@ -56,11 +58,13 @@ public class BankService {
         }
         gamer = gamers.poll();
         if (price == 10) {
+            assert gamer != null;
             price += gamerService.doBit(gamer, price, cell, game);
             if (price == 10) {
                 return;
             }
         }
+        assert gamer != null;
         System.out.println("Игрок " + gamer.getName() + " выигрывает " + cell.getName() + " на аукционе");
         gamerService.buy(gamer, game, cell, price, cellServices, streetService, utilityAndStationService);
 

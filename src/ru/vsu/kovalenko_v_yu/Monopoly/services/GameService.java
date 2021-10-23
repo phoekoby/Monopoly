@@ -1,8 +1,10 @@
-package Monopoly.services;
+package ru.vsu.kovalenko_v_yu.Monopoly.services;
 
-import Monopoly.models.cells.*;
-import Monopoly.models.Game;
-import Monopoly.models.Gamer;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.Game;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.Gamer;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.BlockOfProperties;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.Cell;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.CellType;
 
 
 import java.util.*;
@@ -109,7 +111,7 @@ public class GameService {
             } else {
                 gamerService.doSomething(gamer, game, chanceService, bankService, cellServices, streetService, utilityAndStationService);
             }
-            Thread.sleep(2000);
+            //Thread.sleep(2000);
         }
         System.out.println(game.getPlayerMoves().poll().getName() + " победил !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }

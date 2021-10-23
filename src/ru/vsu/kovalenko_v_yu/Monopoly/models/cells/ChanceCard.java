@@ -1,4 +1,4 @@
-package Monopoly.models.cells;
+package ru.vsu.kovalenko_v_yu.Monopoly.models.cells;
 
 public class ChanceCard {
     private TypeOfChance type;

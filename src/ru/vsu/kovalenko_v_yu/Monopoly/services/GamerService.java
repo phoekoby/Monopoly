@@ -1,18 +1,15 @@
-package Monopoly.services;
+package ru.vsu.kovalenko_v_yu.Monopoly.services;
 
-import Monopoly.models.Bank;
-import Monopoly.models.cells.BlockOfProperties;
-import Monopoly.models.cells.Cell;
-import Monopoly.models.Game;
-import Monopoly.models.Gamer;
-import Monopoly.models.cells.CellType;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.BlockOfProperties;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.Cell;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.Game;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.Gamer;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.CellType;
 
 import java.util.*;
 
 public class GamerService {
-
-
-    /*
+             /*
               Создаем список игроков и заполняем их начальными значениями
              */
     public void createGamerList(int count, Game game) throws Exception {
@@ -28,7 +25,6 @@ public class GamerService {
             game.getCanGamerDoStep().put(gamer, true);
             location.put(gamer, game.getStart());
             queuegamers.offer(gamer);
-            // gamers.add(gamer);
             gamersCards.put(gamer, new HashMap<>());
         }
 
@@ -36,8 +32,6 @@ public class GamerService {
 
         game.setGamersLocation(location);
         game.setPlayersAndHisCards(gamersCards);
-
-        // return gamers;
     }
 
     /*
@@ -54,7 +48,7 @@ public class GamerService {
         checkWhichCardAndWhatToDo(game, gamer, current, chanceService, bankService,
                 cellServices, streetService, utilityAndStationService);
         System.out.println("Баланс " + gamer.getMoney());
-        System.out.println("\n\n\n\n");
+        System.out.println("\n\n");
     }
 
     /* Бросание кубиков */
@@ -152,7 +146,7 @@ public class GamerService {
             }
         } else {
             if (gamer != game.getCardsAndOwners().get(cell)) {
-                payToOtherGamer(game, gamer, game.getCardsAndOwners().get(cell), game.getHowManyToPayRenta().get(cell), bankService);
+                payToOtherGamer(game, gamer, game.getCardsAndOwners().get(cell), game.getHowManyToPayRenta().get(cell));
             }
 
         }
@@ -160,27 +154,54 @@ public class GamerService {
 
     /* Перерасчет денег */
     public void recalculationMoney(Game game, Gamer gamer, int money) {
-        if (gamer.getMoney() + money < 0) {
-            recalculationMoney(game, gamer, gamer.getMoney());
+    if (gamer.getMoney() + money < 0 && !doingWhenNotEnoughMoney(game,gamer,gamer.getMoney()+money)) {
             System.out.println(gamer.getName() + " отдает последние " + gamer.getMoney() + " и Вылетает из игры !!!!!!!!!!!!!!!!!!!!");
+            recalculationMoney(game, gamer, -gamer.getMoney());
             gameOver(game, gamer);
             return;
         }
         gamer.setMoney(gamer.getMoney() + money);
     }
+    public boolean doingWhenNotEnoughMoney(Game game,Gamer gamer, int howMuch){
+        while(howMuch>0 && !game.getPlayersAndHisCards().get(gamer).isEmpty()){
+            for(BlockOfProperties blockOfProperties : game.getPlayersAndHisCards().get(gamer).keySet()){
+                for (Cell cell: game.getPlayersAndHisCards().get(gamer).get(blockOfProperties)){
+                    if(cell.getCellType()!=CellType.STREET){
+                        recalculationMoney(game,gamer,cell.getPrice()/2);
+                        howMuch-=cell.getPrice()/2;
+                    }else {
+                        recalculationMoney(game, gamer, cell.getPrice()/2 +
+                                (game.getHowManyYouNeedToBuildHouse().get(blockOfProperties))/2 *
+                                        game.getHouses().get(cell));
+                        howMuch -= cell.getPrice()/2 + (game.getHowManyYouNeedToBuildHouse().get(blockOfProperties))/2 * game.getHouses().get(cell);
+                    }
+                    game.getHowManyToPayRenta().put(cell,cell.getPrice());
+                    game.getHouses().put(cell, 0);
+                    game.getCardsAndOwners().remove(cell);
+                    game.getBank().getAllCardInBank().get(blockOfProperties).add(cell);
+                    game.getPlayersAndHisCards().get(gamer).get(blockOfProperties).remove(cell);
+                    if(game.getPlayersAndHisCards().get(gamer).get(blockOfProperties).isEmpty()){
+                        game.getPlayersAndHisCards().get(gamer).remove(blockOfProperties);
+                    }
+                    System.out.println(gamer.getName() + " продает " + cell.getName());
+                    break;
+                }
+                break;
+            }
+        }
+        return howMuch <= 0;
+
+    }
 
     /* Плата другому игроку */
-    public void payToOtherGamer(Game game, Gamer from, Gamer to, int howMuch, BankService bankService) {
-        if (from.getMoney() - howMuch < 0) {
+    public void payToOtherGamer(Game game, Gamer from, Gamer to, int howMuch) {
+        if (from.getMoney() - howMuch < 0 && !doingWhenNotEnoughMoney(game,from, howMuch-from.getMoney())) {
             recalculationMoney(game, to, from.getMoney());
-
-
             System.out.println(from.getName() + " отдает последние " + from.getMoney() + " игроку " + to.getName() + " и  Вылетает из игры !!!!!!!!!!!!!!!!!!!!");
             recalculationMoney(game, from, -from.getMoney());
-            gameOver(game, from);
+            gameOver(game,from);
             return;
         }
-
         System.out.println(from.getName() + " платит " + to.getName() + " " + howMuch);
         recalculationMoney(game, from, -howMuch);
         recalculationMoney(game, to, howMuch);
@@ -194,17 +215,6 @@ public class GamerService {
             gamer1 = game.getPlayerMoves().poll();
         }
         game.getGamersLocation().remove(gamer1);
-        for (BlockOfProperties b : game.getPlayersAndHisCards().get(gamer).keySet()) {
-            for (Cell c : game.getPlayersAndHisCards().get(gamer).get(b)) {
-                game.getHouses().remove(c);
-                game.getHouses().put(c, 0);
-                game.getHowManyToPayRenta().remove(c);
-                game.getHowManyToPayRenta().put(c, c.getPrice());
-                game.getCardsAndOwners().remove(c);
-                game.getBank().getAllCardInBank().get(b).add(c);
-            }
-        }
-
         game.getPlayersAndHisCards().remove(gamer);
     }
 

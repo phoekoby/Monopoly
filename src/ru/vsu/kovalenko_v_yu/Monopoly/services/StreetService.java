@@ -1,10 +1,10 @@
-package Monopoly.services;
+package ru.vsu.kovalenko_v_yu.Monopoly.services;
 
-import Monopoly.models.Game;
-import Monopoly.models.Gamer;
-import Monopoly.models.cells.BlockOfProperties;
-import Monopoly.models.cells.Cell;
-import Monopoly.models.cells.CellType;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.Game;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.Gamer;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.BlockOfProperties;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.Cell;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.CellType;
 
 public class StreetService {
     private final double COEFFICIENT_FOR_EACH_HOUSE = 2.2;

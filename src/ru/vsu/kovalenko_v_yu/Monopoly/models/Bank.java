@@ -1,7 +1,7 @@
-package Monopoly.models;
+package ru.vsu.kovalenko_v_yu.Monopoly.models;
 
-import Monopoly.models.cells.BlockOfProperties;
-import Monopoly.models.cells.Cell;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.BlockOfProperties;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.Cell;
 
 
 import java.util.Map;

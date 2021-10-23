@@ -1,9 +1,9 @@
-package Monopoly.services;
+package ru.vsu.kovalenko_v_yu.Monopoly.services;
 
-import Monopoly.models.Game;
-import Monopoly.models.Gamer;
-import Monopoly.models.cells.BlockOfProperties;
-import Monopoly.models.cells.Cell;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.Game;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.Gamer;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.BlockOfProperties;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.Cell;
 
 public class UtilityAndStationService {
     /* Перерасчет стоимости ренты в зависимости от количства имеющихся карт*/

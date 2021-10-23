@@ -1,10 +1,9 @@
-package Monopoly.services;
+package ru.vsu.kovalenko_v_yu.Monopoly.services;
 
-import Monopoly.models.Game;
-import Monopoly.models.Gamer;
-import Monopoly.models.cells.Cell;
-import Monopoly.models.cells.ChanceCard;
-import Monopoly.models.cells.TypeOfChance;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.Game;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.Gamer;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.ChanceCard;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.TypeOfChance;
 
 import java.util.LinkedList;
 import java.util.Queue;

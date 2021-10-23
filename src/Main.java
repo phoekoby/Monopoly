@@ -1,10 +1,5 @@
-import Monopoly.models.Game;
-import Monopoly.services.*;
-
-import java.io.PrintStream;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import ru.vsu.kovalenko_v_yu.Monopoly.models.Game;
+import ru.vsu.kovalenko_v_yu.Monopoly.services.*;
 
 public class Main {
     public static void main(String[] args) throws Exception{
