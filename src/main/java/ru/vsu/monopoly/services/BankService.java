@@ -1,20 +1,22 @@
-package ru.vsu.kovalenko_v_yu.Monopoly.services;
+package ru.vsu.monopoly.services;
 
-import ru.vsu.kovalenko_v_yu.Monopoly.models.Bank;
-import ru.vsu.kovalenko_v_yu.Monopoly.models.Gamer;
-import ru.vsu.kovalenko_v_yu.Monopoly.models.Game;
-import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.BlockOfProperties;
-import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.Cell;
-import ru.vsu.kovalenko_v_yu.Monopoly.models.cells.CellType;
+import ru.vsu.monopoly.models.Bank;
+import ru.vsu.monopoly.models.Gamer;
+import ru.vsu.monopoly.models.Game;
+import ru.vsu.monopoly.models.cells.PropertiesType;
+import ru.vsu.monopoly.models.cells.Cell;
+import ru.vsu.monopoly.models.cells.CellType;
 
 
 import java.util.*;
 
 public class BankService {
+    private final int MIN_BET = 10;
+
     public Bank createBank(Game game) {
         Cell cell = game.getStart().getNextCell();
-        Map<BlockOfProperties, Set<Cell>> allcards = new HashMap<>();
-        Map<BlockOfProperties, List<Cell>> allCardsToGAme = new HashMap<>();
+        Map<PropertiesType, Set<Cell>> allcards = new HashMap<>();
+        Map<PropertiesType, List<Cell>> allCardsToGAme = new HashMap<>();
         while (cell != game.getStart()) {
             if (cell.getCellType().equals(CellType.STREET) || cell.getCellType().equals(CellType.STATION)
                     || cell.getCellType().equals(CellType.UTILITY)) {
@@ -34,9 +36,8 @@ public class BankService {
     /*
     Аукцион
      */
-    public void auction(Cell cell, Game game, GamerService gamerService, CellServices cellServices,
-                        StreetService streetService, UtilityAndStationService utilityAndStationService) throws Exception {
-        int price = 10;
+    public void auction(Cell cell, Game game, GamerService gamerService) throws Exception {
+        int price = MIN_BET;
         Queue<Gamer> gamers = new LinkedList<>();
         Gamer gamerK = game.getPlayerMoves().poll();
         game.getPlayerMoves().offer(gamerK);
@@ -49,24 +50,22 @@ public class BankService {
         while (gamers.size() > 1) {
             gamer = gamers.poll();
             int sum = gamerService.doBit(gamer, price, cell, game);
-            if (sum == 0) {
-                continue;
-            } else {
+            if (sum != 0) {
                 price += sum;
                 gamers.offer(gamer);
             }
         }
         gamer = gamers.poll();
-        if (price == 10) {
+        if (price == MIN_BET) {
             assert gamer != null;
             price += gamerService.doBit(gamer, price, cell, game);
-            if (price == 10) {
+            if (price == MIN_BET) {
                 return;
             }
         }
         assert gamer != null;
         System.out.println("Игрок " + gamer.getName() + " выигрывает " + cell.getName() + " на аукционе");
-        gamerService.buy(gamer, game, cell, price, cellServices, streetService, utilityAndStationService);
+        gamerService.buy(gamer, game, cell, price);
 
     }
 }

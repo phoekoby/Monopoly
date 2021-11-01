@@ -1,4 +1,4 @@
-package ru.vsu.kovalenko_v_yu.Monopoly.models.cells;
+package ru.vsu.monopoly.models.cells;
 
 public enum CellType {
     START,
