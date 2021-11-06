@@ -20,12 +20,12 @@ public class BankService {
         while (cell != game.getStart()) {
             if (cell.getCellType().equals(CellType.STREET) || cell.getCellType().equals(CellType.STATION)
                     || cell.getCellType().equals(CellType.UTILITY)) {
-                if (!allcards.containsKey(cell.getBlockOfProperties())) {
-                    allcards.put(cell.getBlockOfProperties(), new HashSet<>());
-                    allCardsToGAme.put(cell.getBlockOfProperties(), new ArrayList<>());
+                if (!allcards.containsKey(cell.getPropertiesType())) {
+                    allcards.put(cell.getPropertiesType(), new HashSet<>());
+                    allCardsToGAme.put(cell.getPropertiesType(), new ArrayList<>());
                 }
-                allcards.get(cell.getBlockOfProperties()).add(cell);
-                allCardsToGAme.get(cell.getBlockOfProperties()).add(cell);
+                allcards.get(cell.getPropertiesType()).add(cell);
+                allCardsToGAme.get(cell.getPropertiesType()).add(cell);
             }
             cell = cell.getNextCell();
         }
@@ -45,7 +45,7 @@ public class BankService {
             gamers.offer(game.getPlayerMoves().peek());
             game.getPlayerMoves().offer(game.getPlayerMoves().poll());
         }
-
+        //Каждый игрок, начиная с первого делают ставку по очереди, пока хотят
         Gamer gamer;
         while (gamers.size() > 1) {
             gamer = gamers.poll();

@@ -26,7 +26,7 @@ public class Cell {
         return cellType;
     }
 
-    public PropertiesType getBlockOfProperties() {
+    public PropertiesType getPropertiesType() {
         return propertiesType;
     }
 

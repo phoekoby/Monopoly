@@ -146,6 +146,7 @@ public class GamerService {
 
     /* Перерасчет денег */
     public void recalculationMoney(Game game, Gamer gamer, int money) {
+        //Если не хватает денег
         if (gamer.getMoney() + money < 0 && doWhenNotEnoughMoney(game, gamer, gamer.getMoney() + money)) {
             System.out.println(gamer.getName() + " отдает последние " + gamer.getMoney() + " и Вылетает из игры !!!!!!!!!!!!!!!!!!!!");
             recalculationMoney(game, gamer, -gamer.getMoney());
@@ -162,6 +163,7 @@ public class GamerService {
                     .findAny();
             Optional<Cell> cell = mapOfProperties.get(propertiesType.get()).stream()
                     .findAny();
+            //Если Мапа Set<Cell> содержит хоть одно значение, то продажа + перерасчет денег у игрока
             if (cell.isPresent()) {
                 if (cell.get().getCellType() != CellType.STREET) {
                     recalculationMoney(game, gamer, cell.get().getPrice() / 2);
@@ -172,6 +174,7 @@ public class GamerService {
                                     game.getHouses().get(cell.get()));
                     howMuch -= cell.get().getPrice() / 2 + (game.getHowManyYouNeedToBuildHouse().get(propertiesType.get())) / 2 * game.getHouses().get(cell.get());
                 }
+                //Меняем стоимость ренты, удаляем карточки у игрока и возвращаем в банк
                 game.getHowManyToPayRenta().put(cell.get(), cell.get().getPrice());
                 game.getHouses().put(cell.get(), 0);
                 game.getCardsAndOwners().remove(cell.get());
@@ -190,6 +193,7 @@ public class GamerService {
 
     /* Плата другому игроку */
     public void payToOtherGamer(Game game, Gamer from, Gamer to, int howMuch) {
+        //Если кончаются деньги
         if (from.getMoney() - howMuch < 0 && doWhenNotEnoughMoney(game, from, howMuch - from.getMoney())) {
             recalculationMoney(game, to, from.getMoney());
             System.out.println(from.getName() + " отдает последние " + from.getMoney() + " игроку " + to.getName() + " и  Вылетает из игры !!!!!!!!!!!!!!!!!!!!");
@@ -229,7 +233,7 @@ public class GamerService {
             Set<Cell> setOfCells = game.getPlayersAndHisCards().get(gamer).get(b);
             for (Cell cell : setOfCells) {
                 if (streetService.canBuildHouse(game, gamer, cell) && (gamer.getMoney() - game.getHowManyYouNeedToBuildHouse().get(b) > 500)) {
-                    System.out.println("                        " + gamer.getName() + "покупает дом " + " на " + cell.getName());
+                    System.out.println("###" + gamer.getName() + "покупает дом " + " на " + cell.getName());
                     streetService.buildHouse(game, cell);
                 }
             }
@@ -248,10 +252,10 @@ public class GamerService {
     Проверяет на наличие карточек блока cell, если есть - не покупает
      */
     public boolean checkGamersCards(Gamer gamer, Cell cell, Game game) {
-        int i = game.getAllCards().get(cell.getBlockOfProperties()).size();
+        int i = game.getAllCards().get(cell.getPropertiesType()).size();
         for (; i > 0; i--) {
-            if (game.getCardsAndOwners().containsKey(game.getAllCards().get(cell.getBlockOfProperties()).get(i - 1)) &&
-                    game.getCardsAndOwners().get(game.getAllCards().get(cell.getBlockOfProperties()).get(i - 1)) != gamer) {
+            if (game.getCardsAndOwners().containsKey(game.getAllCards().get(cell.getPropertiesType()).get(i - 1)) &&
+                    game.getCardsAndOwners().get(game.getAllCards().get(cell.getPropertiesType()).get(i - 1)) != gamer) {
                 return false;
             }
         }
@@ -277,12 +281,15 @@ public class GamerService {
         } else {
             gamer.setMoney(gamer.getMoney() - cell.getPrice());
         }
-        game.getBank().getAllCardInBank().get(cell.getBlockOfProperties()).remove(cell);
+        //Удаление из банка
+        game.getBank().getAllCardInBank().get(cell.getPropertiesType()).remove(cell);
+        //добавление карточки в собственность игрока
         cellServices.addToPlayersAndHisCardsForGame(gamer, game, cell);
-        if (haveFullStack(cell.getBlockOfProperties(), gamer, game) && cell.getCellType() == CellType.STREET) {
-            streetService.recalculationRentaIfGetFullStack(game, cell.getBlockOfProperties());
+        //Перерасчет стоимости ренты
+        if (haveFullStack(cell.getPropertiesType(), gamer, game) && cell.getCellType() == CellType.STREET) {
+            streetService.recalculationRentaIfGetFullStack(game, cell.getPropertiesType());
         } else if (cell.getCellType() == CellType.STATION || cell.getCellType() == CellType.UTILITY) {
-            utilityAndStationService.recalculationStationAndUtility(game, cell.getBlockOfProperties(), gamer);
+            utilityAndStationService.recalculationStationAndUtility(game, cell.getPropertiesType(), gamer);
         }
         System.out.println("Игрок " + gamer.getName() + " покупает " + cell.getName() + " за " + (price == 0 ? cell.getPrice() : price));
     }

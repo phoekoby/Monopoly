@@ -8,15 +8,15 @@ import ru.vsu.monopoly.models.cells.CellType;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class StreetService {
 
     /* Проверка можно ли построить дом на этой улице? */
     public boolean canBuildHouse(Game game, Gamer gamer, Cell cell) {
-        if (game.getPlayersAndHisCards().get(gamer).get(cell.getBlockOfProperties()).size() == cell.getBlockOfProperties().getI()
-                && cell.getCellType() == CellType.STREET && game.getHouses().get(cell) < 4) {
-            List<Cell> listOfCells = game.getAllCards().get(cell.getBlockOfProperties());
+        int MAX_COUNT_OF_HOUSES = 4;
+        if (game.getPlayersAndHisCards().get(gamer).get(cell.getPropertiesType()).size() == cell.getPropertiesType().getI()
+                && cell.getCellType() == CellType.STREET && game.getHouses().get(cell) < MAX_COUNT_OF_HOUSES) {
+            List<Cell> listOfCells = game.getAllCards().get(cell.getPropertiesType());
             Map<Cell, Integer> houses = game.getHouses();
             for (Cell listOfCell : listOfCells) {
                 if (houses.get(listOfCell) < game.getHouses().get(cell)) {

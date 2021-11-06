@@ -16,7 +16,7 @@ public class CellServices {
             throw new Exception("Эта карточка не является имуществом");
         }
         Map<PropertiesType, Set<Cell>> allCardsMap = game.getBank().getAllCardInBank();
-        Set<Cell> cells = allCardsMap.get(card.getBlockOfProperties());
+        Set<Cell> cells = allCardsMap.get(card.getPropertiesType());
         if (cells != null) {
             return cells.contains(card);
         }
@@ -26,10 +26,10 @@ public class CellServices {
     /* Добавление купленной карточки в словарь имющихся у игроков карт*/
     public void addToPlayersAndHisCardsForGame(Gamer gamer, Game game, Cell cell) {
         Map<PropertiesType, Set<Cell>> gamerMap = game.getPlayersAndHisCards().get(gamer);
-        if (!gamerMap.containsKey(cell.getBlockOfProperties())) {
-            gamerMap.put(cell.getBlockOfProperties(), new HashSet<>());
+        if (!gamerMap.containsKey(cell.getPropertiesType())) {
+            gamerMap.put(cell.getPropertiesType(), new HashSet<>());
         }
-        gamerMap.get(cell.getBlockOfProperties()).add(cell);
+        gamerMap.get(cell.getPropertiesType()).add(cell);
         game.getCardsAndOwners().put(cell, gamer);
     }
 }
